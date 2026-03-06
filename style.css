@@ -138,6 +138,21 @@ body {
   color: #fff;
 }
 
+.btn-aozora {
+  background: #5b7fa6;
+  color: #fff;
+}
+
+/* ===========================
+   青空文庫ボタンエリア
+   =========================== */
+.btn-area-aozora {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+  margin-top: -16px;
+}
+
 /* ===========================
    件数表示
    =========================== */
