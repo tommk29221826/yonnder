@@ -4,59 +4,60 @@
 
 // ---------------------------------------------------
 // サンプルデータ（青空文庫の実在作品）
+// url が空文字の作品は「青空文庫で読む」ボタンが無効になります
 // 将来的に loadBooks() を差し替えることで外部データに切り替えられます
 // ---------------------------------------------------
 const SAMPLE_BOOKS = [
-  { title: "吾輩は猫である", author: "夏目漱石" },
-  { title: "坊つちやん", author: "夏目漱石" },
-  { title: "こころ", author: "夏目漱石" },
-  { title: "三四郎", author: "夏目漱石" },
-  { title: "それから", author: "夏目漱石" },
-  { title: "門", author: "夏目漱石" },
-  { title: "行人", author: "夏目漱石" },
-  { title: "道草", author: "夏目漱石" },
-  { title: "明暗", author: "夏目漱石" },
-  { title: "虞美人草", author: "夏目漱石" },
-  { title: "羅生門", author: "芥川龍之介" },
-  { title: "藪の中", author: "芥川龍之介" },
-  { title: "鼻", author: "芥川龍之介" },
-  { title: "芋粥", author: "芥川龍之介" },
-  { title: "地獄変", author: "芥川龍之介" },
-  { title: "蜘蛛の糸", author: "芥川龍之介" },
-  { title: "杜子春", author: "芥川龍之介" },
-  { title: "河童", author: "芥川龍之介" },
-  { title: "或阿呆の一生", author: "芥川龍之介" },
-  { title: "歯車", author: "芥川龍之介" },
-  { title: "舞姫", author: "森鴎外" },
-  { title: "高瀬舟", author: "森鴎外" },
-  { title: "山椒大夫", author: "森鴎外" },
-  { title: "阿部一族", author: "森鴎外" },
-  { title: "雁", author: "森鴎外" },
-  { title: "ヰタ・セクスアリス", author: "森鴎外" },
-  { title: "伊豆の踊子", author: "川端康成" },
-  { title: "雪国", author: "川端康成" },
-  { title: "眠れる美女", author: "川端康成" },
-  { title: "山の音", author: "川端康成" },
-  { title: "富嶽百景", author: "太宰治" },
-  { title: "走れメロス", author: "太宰治" },
-  { title: "斜陽", author: "太宰治" },
-  { title: "人間失格", author: "太宰治" },
-  { title: "グッド・バイ", author: "太宰治" },
-  { title: "女生徒", author: "太宰治" },
-  { title: "津軽", author: "太宰治" },
-  { title: "ヴィヨンの妻", author: "太宰治" },
-  { title: "銀河鉄道の夜", author: "宮沢賢治" },
-  { title: "注文の多い料理店", author: "宮沢賢治" },
-  { title: "風の又三郎", author: "宮沢賢治" },
-  { title: "セロ弾きのゴーシュ", author: "宮沢賢治" },
-  { title: "春と修羅", author: "宮沢賢治" },
-  { title: "オツベルと象", author: "宮沢賢治" },
-  { title: "雨ニモマケズ", author: "宮沢賢治" },
-  { title: "江戸川乱歩傑作選", author: "江戸川乱歩" },
-  { title: "D坂の殺人事件", author: "江戸川乱歩" },
-  { title: "心理試験", author: "江戸川乱歩" },
-  { title: "屋根裏の散歩者", author: "江戸川乱歩" },
-  { title: "人間椅子", author: "江戸川乱歩" },
+  { title: "吾輩は猫である",       author: "夏目漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/789_14547.html" },
+  { title: "坊つちやん",           author: "夏目漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/752_14964.html" },
+  { title: "こころ",               author: "夏目漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/773_14836.html" },
+  { title: "三四郎",               author: "夏目漱石",   url: "" },
+  { title: "それから",             author: "夏目漱石",   url: "" },
+  { title: "門",                   author: "夏目漱石",   url: "" },
+  { title: "行人",                 author: "夏目漱石",   url: "" },
+  { title: "道草",                 author: "夏目漱石",   url: "" },
+  { title: "明暗",                 author: "夏目漱石",   url: "" },
+  { title: "虞美人草",             author: "夏目漱石",   url: "" },
+  { title: "羅生門",               author: "芥川龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/127_15260.html" },
+  { title: "藪の中",               author: "芥川龍之介", url: "" },
+  { title: "鼻",                   author: "芥川龍之介", url: "" },
+  { title: "芋粥",                 author: "芥川龍之介", url: "" },
+  { title: "地獄変",               author: "芥川龍之介", url: "" },
+  { title: "蜘蛛の糸",             author: "芥川龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/92_14545.html" },
+  { title: "杜子春",               author: "芥川龍之介", url: "" },
+  { title: "河童",                 author: "芥川龍之介", url: "" },
+  { title: "或阿呆の一生",         author: "芥川龍之介", url: "" },
+  { title: "歯車",                 author: "芥川龍之介", url: "" },
+  { title: "舞姫",                 author: "森鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/682_14948.html" },
+  { title: "高瀬舟",               author: "森鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/681_16714.html" },
+  { title: "山椒大夫",             author: "森鴎外",     url: "" },
+  { title: "阿部一族",             author: "森鴎外",     url: "" },
+  { title: "雁",                   author: "森鴎外",     url: "" },
+  { title: "ヰタ・セクスアリス",   author: "森鴎外",     url: "" },
+  { title: "伊豆の踊子",           author: "川端康成",   url: "" },
+  { title: "雪国",                 author: "川端康成",   url: "" },
+  { title: "眠れる美女",           author: "川端康成",   url: "" },
+  { title: "山の音",               author: "川端康成",   url: "" },
+  { title: "富嶽百景",             author: "太宰治",     url: "https://www.aozora.gr.jp/cards/000035/files/2144_8504.html" },
+  { title: "走れメロス",           author: "太宰治",     url: "https://www.aozora.gr.jp/cards/000035/files/1567_14913.html" },
+  { title: "斜陽",                 author: "太宰治",     url: "" },
+  { title: "人間失格",             author: "太宰治",     url: "https://www.aozora.gr.jp/cards/000035/files/301_14817.html" },
+  { title: "グッド・バイ",         author: "太宰治",     url: "" },
+  { title: "女生徒",               author: "太宰治",     url: "" },
+  { title: "津軽",                 author: "太宰治",     url: "" },
+  { title: "ヴィヨンの妻",         author: "太宰治",     url: "" },
+  { title: "銀河鉄道の夜",         author: "宮沢賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/456_15050.html" },
+  { title: "注文の多い料理店",     author: "宮沢賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/1927_18597.html" },
+  { title: "風の又三郎",           author: "宮沢賢治",   url: "" },
+  { title: "セロ弾きのゴーシュ",   author: "宮沢賢治",   url: "" },
+  { title: "春と修羅",             author: "宮沢賢治",   url: "" },
+  { title: "オツベルと象",         author: "宮沢賢治",   url: "" },
+  { title: "雨ニモマケズ",         author: "宮沢賢治",   url: "" },
+  { title: "江戸川乱歩傑作選",     author: "江戸川乱歩", url: "" },
+  { title: "D坂の殺人事件",       author: "江戸川乱歩", url: "" },
+  { title: "心理試験",             author: "江戸川乱歩", url: "" },
+  { title: "屋根裏の散歩者",       author: "江戸川乱歩", url: "" },
+  { title: "人間椅子",             author: "江戸川乱歩", url: "" },
 ];
 
 // ---------------------------------------------------
@@ -97,12 +98,12 @@ function initApp() {
  * 【差し替えポイント】
  * 将来的に青空文庫APIや外部JSONから取得する場合は
  * この関数の中身を書き換えてください。
- * books 配列に { title, author } の形式でデータを入れれば動きます。
+ * books 配列に { title, author, url } の形式でデータを入れれば動きます。
  *
  * 例（fetch を使う場合）:
  *   const res = await fetch("https://example.com/aozora.json");
  *   const data = await res.json();
- *   books = data.map(item => ({ title: item.title, author: item.person_name }));
+ *   books = data.map(item => ({ title: item.title, author: item.person_name, url: item.url || "" }));
  */
 function loadBooks() {
   books = SAMPLE_BOOKS;
@@ -152,7 +153,7 @@ function markAsUnread() {
 
 /**
  * 作品を保存する（重複チェック付き）
- * @param {Object} book        - 保存する作品 { title, author }
+ * @param {Object} book        - 保存する作品 { title, author, url }
  * @param {string} targetKey   - 保存先 localStorage キー
  * @param {string} oppositeKey - 反対側の localStorage キー（重複確認用）
  */
@@ -218,6 +219,10 @@ function renderBook(book) {
   bookInfo.classList.remove("hidden");
   titleEl.textContent  = book.title;
   authorEl.textContent = "著者：" + book.author;
+
+  // 青空文庫URLの有無でボタンの有効/無効を切り替える
+  const btnAozora = document.getElementById("btn-aozora");
+  btnAozora.disabled = !book.url;
 }
 
 /** 件数カウンターを更新する */
@@ -300,6 +305,17 @@ function hideError() {
 function enableActionButtons(enabled) {
   document.getElementById("btn-read").disabled   = !enabled;
   document.getElementById("btn-unread").disabled = !enabled;
+  // 青空文庫ボタンは currentBook の url の有無で別途制御するため、
+  // enabled=false のとき（作品未表示時）のみ無効化する
+  if (!enabled) {
+    document.getElementById("btn-aozora").disabled = true;
+  }
+}
+
+/** 現在表示中の作品の青空文庫ページを新しいタブで開く */
+function openAozora() {
+  if (!currentBook || !currentBook.url) return;
+  window.open(currentBook.url, "_blank", "noopener,noreferrer");
 }
 
 /** ボタンにイベントリスナーを登録する */
@@ -307,6 +323,7 @@ function bindEvents() {
   document.getElementById("btn-random").addEventListener("click", showRandomBook);
   document.getElementById("btn-read").addEventListener("click",   markAsRead);
   document.getElementById("btn-unread").addEventListener("click", markAsUnread);
+  document.getElementById("btn-aozora").addEventListener("click", openAozora);
 }
 
 // ---------------------------------------------------
