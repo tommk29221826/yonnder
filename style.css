@@ -13,6 +13,7 @@ body {
   color: #333;
   line-height: 1.6;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* ===========================
@@ -21,25 +22,26 @@ body {
 .container {
   max-width: 680px;
   margin: 0 auto;
-  padding: 32px 16px 64px;
+  padding: 20px 16px 60px;
+  width: 100%;
 }
 
 /* ===========================
    タイトル
    =========================== */
 .app-title {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: #2c2c2c;
 }
 
 .app-desc {
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: #666;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 /* ===========================
@@ -49,13 +51,13 @@ body {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 32px 24px;
+  padding: 24px 16px;
   text-align: center;
-  min-height: 120px;
+  min-height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
@@ -65,14 +67,15 @@ body {
 }
 
 .book-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #1a1a1a;
+  word-break: break-all;
 }
 
 .book-author {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #555;
 }
 
@@ -89,24 +92,19 @@ body {
 }
 
 /* ===========================
-   ボタン
+   ボタン共通
    =========================== */
-.btn-area {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 32px;
-}
-
 .btn {
-  padding: 12px 24px;
+  padding: 14px 12px;
   font-size: 1rem;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
   transition: opacity 0.15s, transform 0.1s;
+  min-height: 48px;
+  touch-action: manipulation;
+  width: 100%;
 }
 
 .btn:hover:not(:disabled) {
@@ -123,12 +121,34 @@ body {
   cursor: not-allowed;
 }
 
-.btn-random:disabled {
-  background: #7aabdc;
+/* ===========================
+   ボタンエリア
+   =========================== */
+.btn-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
+.btn-area-aozora {
+  margin-bottom: 20px;
+}
+
+.btn-area-more {
+  margin-top: 10px;
+}
+
+/* ===========================
+   ボタン色
+   =========================== */
 .btn-random {
   background: #4a90d9;
+  color: #fff;
+}
+
+.btn-author {
+  background: #7b5ea7;
   color: #fff;
 }
 
@@ -147,14 +167,101 @@ body {
   color: #fff;
 }
 
+.btn-more {
+  background: #888;
+  color: #fff;
+}
+
 /* ===========================
-   青空文庫ボタンエリア
+   作者ガチャセクション
    =========================== */
-.btn-area-aozora {
+.author-section {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 18px 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.author-card {
+  text-align: center;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0ece4;
+}
+
+.author-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.author-book-count {
+  font-size: 0.88rem;
+  color: #666;
+}
+
+.author-book-list {
+  list-style: none;
+}
+
+.author-book-list li {
+  padding: 10px 4px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #f0ece4;
   display: flex;
-  justify-content: center;
-  margin-bottom: 32px;
-  margin-top: -16px;
+  align-items: flex-start;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.author-book-list li:last-child {
+  border-bottom: none;
+}
+
+.author-book-list .book-num {
+  color: #aaa;
+  font-size: 0.8rem;
+  min-width: 22px;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+.author-book-list .book-link {
+  color: #2c5282;
+  text-decoration: none;
+  font-weight: bold;
+  word-break: break-all;
+  flex: 1;
+}
+
+.author-book-list .book-link:hover {
+  text-decoration: underline;
+}
+
+.author-book-list .book-no-link {
+  color: #333;
+  font-weight: bold;
+  word-break: break-all;
+  flex: 1;
+}
+
+.author-book-list .aozora-tag {
+  font-size: 0.75rem;
+  background: #e8f0f8;
+  color: #5b7fa6;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  text-decoration: none;
+  align-self: center;
+}
+
+.author-book-list .aozora-tag:hover {
+  background: #d0e4f4;
 }
 
 /* ===========================
@@ -162,16 +269,16 @@ body {
    =========================== */
 .stats {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .stat-box {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 16px 28px;
+  padding: 14px 16px;
   text-align: center;
   flex: 1;
   max-width: 200px;
@@ -186,7 +293,7 @@ body {
 }
 
 .stat-count {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #2c2c2c;
 }
@@ -207,14 +314,14 @@ body {
 .list-title {
   font-size: 1.1rem;
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   color: #2c2c2c;
   border-bottom: 2px solid #e0d8cc;
   padding-bottom: 8px;
 }
 
 .list-block {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .list-subtitle {
@@ -245,7 +352,7 @@ body {
 }
 
 .book-list li {
-  padding: 10px 16px;
+  padding: 10px 14px;
   font-size: 0.9rem;
   border-bottom: 1px solid #f0ece4;
 }
@@ -256,7 +363,8 @@ body {
 
 .book-list li .item-title {
   font-weight: bold;
-  margin-right: 8px;
+  margin-right: 6px;
+  word-break: break-all;
 }
 
 .book-list li .item-author {
@@ -271,27 +379,35 @@ body {
 }
 
 /* ===========================
-   レスポンシブ
+   デスクトップ向け調整
    =========================== */
-@media (max-width: 480px) {
+@media (min-width: 480px) {
+  .container {
+    padding: 32px 24px 64px;
+  }
+
   .app-title {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
   }
 
-  .btn {
-    padding: 10px 16px;
-    font-size: 0.95rem;
+  .app-desc {
+    font-size: 0.9rem;
+    margin-bottom: 32px;
   }
 
-  .stats {
-    gap: 10px;
+  .card {
+    padding: 32px 24px;
+  }
+
+  .book-title {
+    font-size: 1.5rem;
   }
 
   .stat-box {
-    padding: 12px 16px;
+    padding: 16px 24px;
   }
 
   .stat-count {
-    font-size: 1.6rem;
+    font-size: 2rem;
   }
 }

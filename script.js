@@ -10,15 +10,27 @@ const SAMPLE_BOOKS = [
   { title: "吾輩は猫である",       author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/789_14547.html" },
   { title: "坊つちやん",           author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/752_14964.html" },
   { title: "こころ",               author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/773_14836.html" },
+  { title: "それから",             author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/711_14729.html" },
+  { title: "三四郎",               author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/794_14946.html" },
   { title: "羅生門",               author: "芥川 龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/127_15260.html" },
   { title: "蜘蛛の糸",             author: "芥川 龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/92_14545.html" },
+  { title: "鼻",                   author: "芥川 龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/42_15228.html" },
+  { title: "藪の中",               author: "芥川 龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/179_15237.html" },
   { title: "舞姫",                 author: "森 鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/682_14948.html" },
   { title: "高瀬舟",               author: "森 鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/681_16714.html" },
+  { title: "雁",                   author: "森 鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/680_20385.html" },
   { title: "富嶽百景",             author: "太宰 治",     url: "https://www.aozora.gr.jp/cards/000035/files/2144_8504.html" },
   { title: "走れメロス",           author: "太宰 治",     url: "https://www.aozora.gr.jp/cards/000035/files/1567_14913.html" },
   { title: "人間失格",             author: "太宰 治",     url: "https://www.aozora.gr.jp/cards/000035/files/301_14817.html" },
+  { title: "斜陽",                 author: "太宰 治",     url: "https://www.aozora.gr.jp/cards/000035/files/1565_8559.html" },
   { title: "銀河鉄道の夜",         author: "宮沢 賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/456_15050.html" },
   { title: "注文の多い料理店",     author: "宮沢 賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/1927_18597.html" },
+  { title: "風の又三郎",           author: "宮沢 賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/470_15380.html" },
+  { title: "セロ弾きのゴーシュ",   author: "宮沢 賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/470_15380.html" },
+  { title: "伊豆の踊子",           author: "川端 康成",   url: "https://www.aozora.gr.jp/cards/001332/files/49888_46045.html" },
+  { title: "みだれ髪",             author: "与謝野 晶子", url: "https://www.aozora.gr.jp/cards/000885/files/3651_10021.html" },
+  { title: "一握の砂",             author: "石川 啄木",   url: "https://www.aozora.gr.jp/cards/000153/files/816_20298.html" },
+  { title: "悲しき玩具",           author: "石川 啄木",   url: "https://www.aozora.gr.jp/cards/000153/files/817_19085.html" },
 ];
 
 // ---------------------------------------------------
@@ -33,11 +45,20 @@ const STORAGE_KEY_READ   = "hima_read_books";
 const STORAGE_KEY_UNREAD = "hima_unread_books";
 
 // ---------------------------------------------------
+// 作者ガチャ用定数
+// ---------------------------------------------------
+const AUTHOR_PAGE_SIZE = 10;
+
+// ---------------------------------------------------
 // アプリの状態
 // ---------------------------------------------------
-let books        = [];   // 作品一覧
-let currentBook  = null; // 現在表示中の作品
-let lastBookKey  = null; // 直前に表示した作品のキー（連続表示防止）
+let books            = [];   // 作品一覧
+let currentBook      = null; // 現在表示中の作品
+let lastBookKey      = null; // 直前に表示した作品のキー（連続表示防止）
+let authorMap        = {};   // 作者名 -> 作品配列 のマップ
+let authorList       = [];   // 作者名一覧
+let currentAuthor    = null; // 現在表示中の作者
+let authorBookOffset = 0;    // 作者の作品一覧の現在の表示件数
 
 // ---------------------------------------------------
 // ページ読み込み時の初期化
@@ -50,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initApp() {
   setLoadingState(true);
   await loadBooks();
+  buildAuthorMap();
   setLoadingState(false);
   renderStats();
   renderLists();
@@ -180,6 +202,22 @@ function parseCsvLine(line) {
 }
 
 // ---------------------------------------------------
+// 作者マップ構築
+// ---------------------------------------------------
+
+/** books 配列から author ごとに作品をグループ化する */
+function buildAuthorMap() {
+  authorMap = {};
+  for (const book of books) {
+    if (!authorMap[book.author]) {
+      authorMap[book.author] = [];
+    }
+    authorMap[book.author].push(book);
+  }
+  authorList = Object.keys(authorMap);
+}
+
+// ---------------------------------------------------
 // ローディング状態制御
 // ---------------------------------------------------
 
@@ -187,21 +225,26 @@ function parseCsvLine(line) {
 function setLoadingState(loading) {
   const hintEl    = document.getElementById("hint-msg");
   const btnRandom = document.getElementById("btn-random");
+  const btnAuthor = document.getElementById("btn-author");
 
   if (loading) {
     hintEl.textContent = "作品データを読み込み中...";
     hintEl.classList.remove("hidden");
     btnRandom.disabled = true;
     btnRandom.textContent = "読み込み中...";
+    btnAuthor.disabled = true;
+    btnAuthor.textContent = "読み込み中...";
   } else {
-    hintEl.textContent = "「ランダム表示」を押して作品を表示してください";
+    hintEl.textContent = "「作品ガチャ」を押して作品を表示してください";
     btnRandom.disabled = false;
-    btnRandom.textContent = "ランダム表示";
+    btnRandom.textContent = "作品ガチャ";
+    btnAuthor.disabled = false;
+    btnAuthor.textContent = "作者ガチャ";
   }
 }
 
 // ---------------------------------------------------
-// ランダム表示
+// 作品ガチャ
 // ---------------------------------------------------
 
 /** ランダムに1件の作品を選んで表示する */
@@ -217,13 +260,124 @@ function showRandomBook() {
   // 候補が0件（作品が1件しかない場合）は全体から選ぶ
   const pool = candidates.length > 0 ? candidates : books;
 
-  const index     = Math.floor(Math.random() * pool.length);
-  currentBook     = pool[index];
-  lastBookKey     = makeKey(currentBook);
+  const index    = Math.floor(Math.random() * pool.length);
+  currentBook    = pool[index];
+  lastBookKey    = makeKey(currentBook);
+
+  // 作者ガチャセクションを隠す
+  document.getElementById("author-section").classList.add("hidden");
 
   renderBook(currentBook);
   enableActionButtons(true);
   hideError();
+}
+
+// ---------------------------------------------------
+// 作者ガチャ
+// ---------------------------------------------------
+
+/** ランダムに1人の作者を選んで表示する */
+function showRandomAuthor() {
+  if (authorList.length === 0) {
+    showError("作者データが読み込まれていません。");
+    return;
+  }
+
+  const index = Math.floor(Math.random() * authorList.length);
+  currentAuthor    = authorList[index];
+  authorBookOffset = 0;
+
+  renderAuthorSection(currentAuthor);
+  hideError();
+}
+
+/** 作者ガチャのセクションを描画する */
+function renderAuthorSection(author) {
+  const section  = document.getElementById("author-section");
+  const nameEl   = document.getElementById("author-name");
+  const countEl  = document.getElementById("author-book-count");
+  const listEl   = document.getElementById("author-book-list");
+  const moreBtn  = document.getElementById("btn-more-books");
+
+  const bookList = authorMap[author] || [];
+
+  nameEl.textContent  = author;
+  countEl.textContent = "作品数：" + bookList.length + "件";
+
+  // 最初の AUTHOR_PAGE_SIZE 件を表示
+  authorBookOffset = Math.min(AUTHOR_PAGE_SIZE, bookList.length);
+  renderAuthorBookItems(listEl, bookList, 0, authorBookOffset);
+
+  // 「もっと見る」ボタンの表示切替
+  if (bookList.length > authorBookOffset) {
+    moreBtn.classList.remove("hidden");
+  } else {
+    moreBtn.classList.add("hidden");
+  }
+
+  section.classList.remove("hidden");
+}
+
+/**
+ * 作者の作品リスト項目を描画する（start 以上 end 未満）
+ * start === 0 のとき一覧をリセットしてから描画する
+ */
+function renderAuthorBookItems(listEl, bookList, start, end) {
+  if (start === 0) {
+    listEl.innerHTML = "";
+  }
+
+  for (let i = start; i < end; i++) {
+    const book = bookList[i];
+    const li   = document.createElement("li");
+
+    const numSpan = document.createElement("span");
+    numSpan.className   = "book-num";
+    numSpan.textContent = (i + 1) + ".";
+    li.appendChild(numSpan);
+
+    if (book.url) {
+      const a = document.createElement("a");
+      a.className   = "book-link";
+      a.textContent = book.title;
+      a.href        = book.url;
+      a.target      = "_blank";
+      a.rel         = "noopener noreferrer";
+      li.appendChild(a);
+
+      const tag = document.createElement("a");
+      tag.className   = "aozora-tag";
+      tag.textContent = "青空文庫で読む";
+      tag.href        = book.url;
+      tag.target      = "_blank";
+      tag.rel         = "noopener noreferrer";
+      li.appendChild(tag);
+    } else {
+      const span = document.createElement("span");
+      span.className   = "book-no-link";
+      span.textContent = book.title;
+      li.appendChild(span);
+    }
+
+    listEl.appendChild(li);
+  }
+}
+
+/** 「もっと見る」で次の AUTHOR_PAGE_SIZE 件を追加表示する */
+function showMoreAuthorBooks() {
+  if (!currentAuthor) return;
+
+  const bookList = authorMap[currentAuthor] || [];
+  const listEl   = document.getElementById("author-book-list");
+  const moreBtn  = document.getElementById("btn-more-books");
+
+  const newEnd = Math.min(authorBookOffset + AUTHOR_PAGE_SIZE, bookList.length);
+  renderAuthorBookItems(listEl, bookList, authorBookOffset, newEnd);
+  authorBookOffset = newEnd;
+
+  if (authorBookOffset >= bookList.length) {
+    moreBtn.classList.add("hidden");
+  }
 }
 
 // ---------------------------------------------------
@@ -412,9 +566,11 @@ function openAozora() {
 /** ボタンにイベントリスナーを登録する */
 function bindEvents() {
   document.getElementById("btn-random").addEventListener("click", showRandomBook);
+  document.getElementById("btn-author").addEventListener("click", showRandomAuthor);
   document.getElementById("btn-read").addEventListener("click",   markAsRead);
   document.getElementById("btn-unread").addEventListener("click", markAsUnread);
   document.getElementById("btn-aozora").addEventListener("click", openAozora);
+  document.getElementById("btn-more-books").addEventListener("click", showMoreAuthorBooks);
 }
 
 // ---------------------------------------------------
