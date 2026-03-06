@@ -14,10 +14,25 @@
     <!-- 作品表示エリア -->
     <div class="card" id="book-card">
       <p class="hint" id="hint-msg">「作品ガチャ」を押して作品を表示してください</p>
+
+      <!-- 作品ガチャ / 作者ガチャ表示 -->
       <div id="book-info" class="hidden">
         <p class="book-title" id="book-title"></p>
         <p class="book-author" id="book-author"></p>
       </div>
+
+      <!-- 一文ガチャ表示 -->
+      <div id="quote-area" class="hidden">
+        <div class="quote-inner">
+          <p class="quote-text" id="quote-text"></p>
+          <button class="btn btn-reveal" id="btn-reveal">答えを見る</button>
+          <div id="quote-answer" class="hidden quote-answer">
+            <p class="book-title" id="quote-book-title"></p>
+            <p class="book-author" id="quote-book-author"></p>
+          </div>
+        </div>
+      </div>
+
       <p class="error-msg hidden" id="error-msg"></p>
     </div>
 
@@ -25,6 +40,7 @@
     <div class="btn-area btn-gacha-area">
       <button class="btn btn-random" id="btn-random">作品ガチャ</button>
       <button class="btn btn-author" id="btn-author">作者ガチャ</button>
+      <button class="btn btn-quote" id="btn-quote">一文ガチャ</button>
     </div>
 
     <!-- 仕分けボタンエリア -->

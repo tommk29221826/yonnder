@@ -3,6 +3,49 @@
 // ===================================================
 
 // ---------------------------------------------------
+// 一文ガチャ用データ（quote付き固定データ）
+// quote のない作品はガチャ対象外
+// ---------------------------------------------------
+const QUOTE_BOOKS = [
+  {
+    title:  "人間失格",
+    author: "太宰 治",
+    url:    "https://www.aozora.gr.jp/cards/000035/files/301_14817.html",
+    quote:  "恥の多い生涯を送って来ました。",
+  },
+  {
+    title:  "吾輩は猫である",
+    author: "夏目 漱石",
+    url:    "https://www.aozora.gr.jp/cards/000148/files/789_14547.html",
+    quote:  "吾輩は猫である。名前はまだ無い。",
+  },
+  {
+    title:  "走れメロス",
+    author: "太宰 治",
+    url:    "https://www.aozora.gr.jp/cards/000035/files/1567_14913.html",
+    quote:  "メロスは激怒した。",
+  },
+  {
+    title:  "羅生門",
+    author: "芥川 龍之介",
+    url:    "https://www.aozora.gr.jp/cards/000879/files/127_15260.html",
+    quote:  "ある日の暮方のことである。",
+  },
+  {
+    title:  "こころ",
+    author: "夏目 漱石",
+    url:    "https://www.aozora.gr.jp/cards/000148/files/773_14836.html",
+    quote:  "私はその人を常に先生と呼んでいた。",
+  },
+  {
+    title:  "舞姫",
+    author: "森 鴎外",
+    url:    "https://www.aozora.gr.jp/cards/000129/files/682_14948.html",
+    quote:  "石炭をば早や積み果てつ。",
+  },
+];
+
+// ---------------------------------------------------
 // フォールバック用サンプルデータ（青空文庫の実在作品）
 // CSV読み込みに失敗した場合に使用されます
 // ---------------------------------------------------
@@ -52,13 +95,14 @@ const AUTHOR_PAGE_SIZE = 10;
 // ---------------------------------------------------
 // アプリの状態
 // ---------------------------------------------------
-let books            = [];   // 作品一覧
+let books            = [];   // 作品一覧（青空文庫CSV or SAMPLE_BOOKS）
 let currentBook      = null; // 現在表示中の作品
 let lastBookKey      = null; // 直前に表示した作品のキー（連続表示防止）
 let authorMap        = {};   // 作者名 -> 作品配列 のマップ
 let authorList       = [];   // 作者名一覧
 let currentAuthor    = null; // 現在表示中の作者
 let authorBookOffset = 0;    // 作者の作品一覧の現在の表示件数
+let currentMode      = null; // 表示モード: "book" | "author" | "quote"
 
 // ---------------------------------------------------
 // ページ読み込み時の初期化
@@ -76,6 +120,9 @@ async function initApp() {
   renderStats();
   renderLists();
   bindEvents();
+
+  // 一文ガチャの対象件数を確認
+  console.log("一文ガチャ対象件数:", QUOTE_BOOKS.length, "件");
 }
 
 // ---------------------------------------------------
@@ -226,6 +273,7 @@ function setLoadingState(loading) {
   const hintEl    = document.getElementById("hint-msg");
   const btnRandom = document.getElementById("btn-random");
   const btnAuthor = document.getElementById("btn-author");
+  const btnQuote  = document.getElementById("btn-quote");
 
   if (loading) {
     hintEl.textContent = "作品データを読み込み中...";
@@ -234,12 +282,16 @@ function setLoadingState(loading) {
     btnRandom.textContent = "読み込み中...";
     btnAuthor.disabled = true;
     btnAuthor.textContent = "読み込み中...";
+    btnQuote.disabled = true;
+    btnQuote.textContent = "読み込み中...";
   } else {
     hintEl.textContent = "「作品ガチャ」を押して作品を表示してください";
     btnRandom.disabled = false;
     btnRandom.textContent = "作品ガチャ";
     btnAuthor.disabled = false;
     btnAuthor.textContent = "作者ガチャ";
+    btnQuote.disabled = false;
+    btnQuote.textContent = "一文ガチャ";
   }
 }
 
@@ -276,6 +328,8 @@ function showRandomBook() {
     return;
   }
 
+  currentMode = "book";
+
   // 未読作品（「読んだ」に登録されていない作品）を優先する
   const unread = getUnreadBooks();
   const pool   = unread.length > 0 ? unread : books;
@@ -283,12 +337,59 @@ function showRandomBook() {
   currentBook = pickRandom(pool);
   lastBookKey = makeKey(currentBook);
 
-  // 作者ガチャセクションを隠す
+  // 作者ガチャ・一文ガチャのセクションを隠す
   document.getElementById("author-section").classList.add("hidden");
+  document.getElementById("quote-area").classList.add("hidden");
 
   renderBook(currentBook);
   enableActionButtons(true);
   hideError();
+}
+
+// ---------------------------------------------------
+// 一文ガチャ
+// ---------------------------------------------------
+
+/** ランダムに1件の一文を選んで表示する */
+function showRandomQuote() {
+  if (QUOTE_BOOKS.length === 0) {
+    showError("一文データがありません。");
+    return;
+  }
+
+  currentMode = "quote";
+
+  // 連続表示防止
+  const candidates = QUOTE_BOOKS.filter(b => makeKey(b) !== lastBookKey);
+  const pool = candidates.length > 0 ? candidates : QUOTE_BOOKS;
+  currentBook = pool[Math.floor(Math.random() * pool.length)];
+  lastBookKey = makeKey(currentBook);
+
+  // 他セクションを隠す
+  document.getElementById("author-section").classList.add("hidden");
+  document.getElementById("hint-msg").classList.add("hidden");
+  document.getElementById("book-info").classList.add("hidden");
+  document.getElementById("error-msg").classList.add("hidden");
+
+  // 一文を表示（答えは隠す）
+  document.getElementById("quote-text").textContent = "「" + currentBook.quote + "」";
+  document.getElementById("quote-book-title").textContent = currentBook.title;
+  document.getElementById("quote-book-author").textContent = "著者：" + currentBook.author;
+  document.getElementById("quote-answer").classList.add("hidden");
+  document.getElementById("quote-area").classList.remove("hidden");
+
+  // 「読んだ」「読んでない」を有効化
+  enableActionButtons(true);
+  // 答えを見るまで青空文庫ボタンは無効
+  document.getElementById("btn-aozora").disabled = true;
+}
+
+/** 「答えを見る」で作品名・著者名を表示する */
+function revealAnswer() {
+  if (!currentBook) return;
+  document.getElementById("quote-answer").classList.remove("hidden");
+  // 青空文庫ボタンを URL の有無で制御
+  document.getElementById("btn-aozora").disabled = !currentBook.url;
 }
 
 // ---------------------------------------------------
@@ -302,9 +403,14 @@ function showRandomAuthor() {
     return;
   }
 
+  currentMode = "author";
+
   const index = Math.floor(Math.random() * authorList.length);
   currentAuthor    = authorList[index];
   authorBookOffset = 0;
+
+  // 一文ガチャエリアを隠す
+  document.getElementById("quote-area").classList.add("hidden");
 
   renderAuthorSection(currentAuthor);
   hideError();
@@ -435,8 +541,8 @@ function saveBook(book, targetKey, oppositeKey) {
   const filtered = oppositeList.filter(b => makeKey(b) !== key);
   saveList(oppositeKey, filtered);
 
-  // 対象カテゴリに追加して保存
-  targetList.push(book);
+  // 対象カテゴリに追加して保存（quote フィールドは保存不要なので除外）
+  targetList.push({ title: book.title, author: book.author, url: book.url });
   saveList(targetKey, targetList);
 
   renderStats();
@@ -472,7 +578,7 @@ function saveList(storageKey, list) {
 // 画面描画
 // ---------------------------------------------------
 
-/** 作品情報をカードに表示する */
+/** 作品情報をカードに表示する（作品ガチャモード用）*/
 function renderBook(book) {
   const hintEl   = document.getElementById("hint-msg");
   const bookInfo = document.getElementById("book-info");
@@ -554,6 +660,7 @@ function showError(message) {
   // カード内のヒントと作品情報を隠す
   document.getElementById("hint-msg").classList.add("hidden");
   document.getElementById("book-info").classList.add("hidden");
+  document.getElementById("quote-area").classList.add("hidden");
 }
 
 /** エラーメッセージを非表示にする */
@@ -586,9 +693,11 @@ function openAozora() {
 function bindEvents() {
   document.getElementById("btn-random").addEventListener("click", showRandomBook);
   document.getElementById("btn-author").addEventListener("click", showRandomAuthor);
+  document.getElementById("btn-quote").addEventListener("click",  showRandomQuote);
   document.getElementById("btn-read").addEventListener("click",   markAsRead);
   document.getElementById("btn-unread").addEventListener("click", markAsUnread);
   document.getElementById("btn-aozora").addEventListener("click", openAozora);
+  document.getElementById("btn-reveal").addEventListener("click", revealAnswer);
   document.getElementById("btn-more-books").addEventListener("click", showMoreAuthorBooks);
 }
 
