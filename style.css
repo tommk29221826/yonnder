@@ -1,0 +1,278 @@
+/* ===========================
+   リセット・基本設定
+   =========================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  background: #f5f0e8;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===========================
+   レイアウト
+   =========================== */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+
+/* ===========================
+   タイトル
+   =========================== */
+.app-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #2c2c2c;
+}
+
+.app-desc {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+/* ===========================
+   作品カード
+   =========================== */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 32px 24px;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.hint {
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.book-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+}
+
+.book-author {
+  font-size: 1rem;
+  color: #555;
+}
+
+.error-msg {
+  color: #c0392b;
+  font-size: 0.95rem;
+}
+
+/* ===========================
+   ユーティリティ
+   =========================== */
+.hidden {
+  display: none;
+}
+
+/* ===========================
+   ボタン
+   =========================== */
+.btn-area {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.btn:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-random {
+  background: #4a90d9;
+  color: #fff;
+}
+
+.btn-read {
+  background: #27ae60;
+  color: #fff;
+}
+
+.btn-unread {
+  background: #e67e22;
+  color: #fff;
+}
+
+/* ===========================
+   件数表示
+   =========================== */
+.stats {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.stat-box {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px 28px;
+  text-align: center;
+  flex: 1;
+  max-width: 200px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.stat-count {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c2c2c;
+}
+
+.stat-unit {
+  font-size: 0.85rem;
+  color: #666;
+  margin-left: 2px;
+}
+
+/* ===========================
+   保存済み一覧
+   =========================== */
+.list-section {
+  margin-top: 8px;
+}
+
+.list-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #2c2c2c;
+  border-bottom: 2px solid #e0d8cc;
+  padding-bottom: 8px;
+}
+
+.list-block {
+  margin-bottom: 28px;
+}
+
+.list-subtitle {
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.read-label {
+  background: #d5f0e0;
+  color: #1e7a46;
+}
+
+.unread-label {
+  background: #fdebd0;
+  color: #a04000;
+}
+
+.book-list {
+  list-style: none;
+  background: #fff;
+  border: 1px solid #e0d8cc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.book-list li {
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f0ece4;
+}
+
+.book-list li:last-child {
+  border-bottom: none;
+}
+
+.book-list li .item-title {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.book-list li .item-author {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.empty-item {
+  color: #aaa;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* ===========================
+   レスポンシブ
+   =========================== */
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 1.3rem;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+  }
+
+  .stats {
+    gap: 10px;
+  }
+
+  .stat-box {
+    padding: 12px 16px;
+  }
+
+  .stat-count {
+    font-size: 1.6rem;
+  }
+}

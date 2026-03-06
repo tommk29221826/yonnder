@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暇つぶし読書仕分けアプリ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="app-title">暇つぶし読書仕分けアプリ</h1>
+    <p class="app-desc">青空文庫の作品をランダムに表示して、読んだかどうか仕分けよう</p>
+
+    <!-- 作品表示エリア -->
+    <div class="card" id="book-card">
+      <p class="hint">「ランダム表示」を押して作品を表示してください</p>
+      <div id="book-info" class="hidden">
+        <p class="book-title" id="book-title"></p>
+        <p class="book-author" id="book-author"></p>
+      </div>
+      <p class="error-msg hidden" id="error-msg"></p>
+    </div>
+
+    <!-- ボタンエリア -->
+    <div class="btn-area">
+      <button class="btn btn-random" id="btn-random">ランダム表示</button>
+      <button class="btn btn-read" id="btn-read" disabled>読んだ</button>
+      <button class="btn btn-unread" id="btn-unread" disabled>読んでない</button>
+    </div>
+
+    <!-- 件数表示 -->
+    <div class="stats">
+      <div class="stat-box">
+        <span class="stat-label">読んだ</span>
+        <span class="stat-count" id="count-read">0</span>
+        <span class="stat-unit">件</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">読んでない</span>
+        <span class="stat-count" id="count-unread">0</span>
+        <span class="stat-unit">件</span>
+      </div>
+    </div>
+
+    <!-- 保存済み一覧 -->
+    <div class="list-section">
+      <h2 class="list-title">保存済み一覧</h2>
+
+      <div class="list-block">
+        <h3 class="list-subtitle read-label">読んだ作品</h3>
+        <ul class="book-list" id="list-read">
+          <li class="empty-item">まだありません</li>
+        </ul>
+      </div>
+
+      <div class="list-block">
+        <h3 class="list-subtitle unread-label">読んでない作品</h3>
+        <ul class="book-list" id="list-unread">
+          <li class="empty-item">まだありません</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
