@@ -247,22 +247,41 @@ function setLoadingState(loading) {
 // 作品ガチャ
 // ---------------------------------------------------
 
-/** ランダムに1件の作品を選んで表示する */
+/**
+ * 「読んだ」に登録されていない未読作品の一覧を返す。
+ * 一度も仕分けしていない作品も未読として扱う。
+ * @returns {Object[]}
+ */
+function getUnreadBooks() {
+  const readKeys = new Set(getList(STORAGE_KEY_READ).map(makeKey));
+  return books.filter(b => !readKeys.has(makeKey(b)));
+}
+
+/**
+ * pool からランダムに1件選ぶ。lastBookKey と一致する作品は除外し、
+ * 候補が0件になった場合（pool に1件しかない場合）は pool 全体から選ぶ。
+ * @param {Object[]} pool
+ * @returns {Object}
+ */
+function pickRandom(pool) {
+  const candidates = pool.filter(b => makeKey(b) !== lastBookKey);
+  const source     = candidates.length > 0 ? candidates : pool;
+  return source[Math.floor(Math.random() * source.length)];
+}
+
+/** ランダムに1件の作品を選んで表示する（未読作品を優先）*/
 function showRandomBook() {
   if (books.length === 0) {
     showError("作品データが読み込まれていません。");
     return;
   }
 
-  // 連続して同じ作品が出ないよう除外リストを作る
-  const candidates = books.filter(b => makeKey(b) !== lastBookKey);
+  // 未読作品（「読んだ」に登録されていない作品）を優先する
+  const unread = getUnreadBooks();
+  const pool   = unread.length > 0 ? unread : books;
 
-  // 候補が0件（作品が1件しかない場合）は全体から選ぶ
-  const pool = candidates.length > 0 ? candidates : books;
-
-  const index    = Math.floor(Math.random() * pool.length);
-  currentBook    = pool[index];
-  lastBookKey    = makeKey(currentBook);
+  currentBook = pickRandom(pool);
+  lastBookKey = makeKey(currentBook);
 
   // 作者ガチャセクションを隠す
   document.getElementById("author-section").classList.add("hidden");
