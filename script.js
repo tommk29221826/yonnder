@@ -3,62 +3,28 @@
 // ===================================================
 
 // ---------------------------------------------------
-// サンプルデータ（青空文庫の実在作品）
-// url が空文字の作品は「青空文庫で読む」ボタンが無効になります
-// 将来的に loadBooks() を差し替えることで外部データに切り替えられます
+// フォールバック用サンプルデータ（青空文庫の実在作品）
+// CSV読み込みに失敗した場合に使用されます
 // ---------------------------------------------------
 const SAMPLE_BOOKS = [
-  { title: "吾輩は猫である",       author: "夏目漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/789_14547.html" },
-  { title: "坊つちやん",           author: "夏目漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/752_14964.html" },
-  { title: "こころ",               author: "夏目漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/773_14836.html" },
-  { title: "三四郎",               author: "夏目漱石",   url: "" },
-  { title: "それから",             author: "夏目漱石",   url: "" },
-  { title: "門",                   author: "夏目漱石",   url: "" },
-  { title: "行人",                 author: "夏目漱石",   url: "" },
-  { title: "道草",                 author: "夏目漱石",   url: "" },
-  { title: "明暗",                 author: "夏目漱石",   url: "" },
-  { title: "虞美人草",             author: "夏目漱石",   url: "" },
-  { title: "羅生門",               author: "芥川龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/127_15260.html" },
-  { title: "藪の中",               author: "芥川龍之介", url: "" },
-  { title: "鼻",                   author: "芥川龍之介", url: "" },
-  { title: "芋粥",                 author: "芥川龍之介", url: "" },
-  { title: "地獄変",               author: "芥川龍之介", url: "" },
-  { title: "蜘蛛の糸",             author: "芥川龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/92_14545.html" },
-  { title: "杜子春",               author: "芥川龍之介", url: "" },
-  { title: "河童",                 author: "芥川龍之介", url: "" },
-  { title: "或阿呆の一生",         author: "芥川龍之介", url: "" },
-  { title: "歯車",                 author: "芥川龍之介", url: "" },
-  { title: "舞姫",                 author: "森鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/682_14948.html" },
-  { title: "高瀬舟",               author: "森鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/681_16714.html" },
-  { title: "山椒大夫",             author: "森鴎外",     url: "" },
-  { title: "阿部一族",             author: "森鴎外",     url: "" },
-  { title: "雁",                   author: "森鴎外",     url: "" },
-  { title: "ヰタ・セクスアリス",   author: "森鴎外",     url: "" },
-  { title: "伊豆の踊子",           author: "川端康成",   url: "" },
-  { title: "雪国",                 author: "川端康成",   url: "" },
-  { title: "眠れる美女",           author: "川端康成",   url: "" },
-  { title: "山の音",               author: "川端康成",   url: "" },
-  { title: "富嶽百景",             author: "太宰治",     url: "https://www.aozora.gr.jp/cards/000035/files/2144_8504.html" },
-  { title: "走れメロス",           author: "太宰治",     url: "https://www.aozora.gr.jp/cards/000035/files/1567_14913.html" },
-  { title: "斜陽",                 author: "太宰治",     url: "" },
-  { title: "人間失格",             author: "太宰治",     url: "https://www.aozora.gr.jp/cards/000035/files/301_14817.html" },
-  { title: "グッド・バイ",         author: "太宰治",     url: "" },
-  { title: "女生徒",               author: "太宰治",     url: "" },
-  { title: "津軽",                 author: "太宰治",     url: "" },
-  { title: "ヴィヨンの妻",         author: "太宰治",     url: "" },
-  { title: "銀河鉄道の夜",         author: "宮沢賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/456_15050.html" },
-  { title: "注文の多い料理店",     author: "宮沢賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/1927_18597.html" },
-  { title: "風の又三郎",           author: "宮沢賢治",   url: "" },
-  { title: "セロ弾きのゴーシュ",   author: "宮沢賢治",   url: "" },
-  { title: "春と修羅",             author: "宮沢賢治",   url: "" },
-  { title: "オツベルと象",         author: "宮沢賢治",   url: "" },
-  { title: "雨ニモマケズ",         author: "宮沢賢治",   url: "" },
-  { title: "江戸川乱歩傑作選",     author: "江戸川乱歩", url: "" },
-  { title: "D坂の殺人事件",       author: "江戸川乱歩", url: "" },
-  { title: "心理試験",             author: "江戸川乱歩", url: "" },
-  { title: "屋根裏の散歩者",       author: "江戸川乱歩", url: "" },
-  { title: "人間椅子",             author: "江戸川乱歩", url: "" },
+  { title: "吾輩は猫である",       author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/789_14547.html" },
+  { title: "坊つちやん",           author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/752_14964.html" },
+  { title: "こころ",               author: "夏目 漱石",   url: "https://www.aozora.gr.jp/cards/000148/files/773_14836.html" },
+  { title: "羅生門",               author: "芥川 龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/127_15260.html" },
+  { title: "蜘蛛の糸",             author: "芥川 龍之介", url: "https://www.aozora.gr.jp/cards/000879/files/92_14545.html" },
+  { title: "舞姫",                 author: "森 鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/682_14948.html" },
+  { title: "高瀬舟",               author: "森 鴎外",     url: "https://www.aozora.gr.jp/cards/000129/files/681_16714.html" },
+  { title: "富嶽百景",             author: "太宰 治",     url: "https://www.aozora.gr.jp/cards/000035/files/2144_8504.html" },
+  { title: "走れメロス",           author: "太宰 治",     url: "https://www.aozora.gr.jp/cards/000035/files/1567_14913.html" },
+  { title: "人間失格",             author: "太宰 治",     url: "https://www.aozora.gr.jp/cards/000035/files/301_14817.html" },
+  { title: "銀河鉄道の夜",         author: "宮沢 賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/456_15050.html" },
+  { title: "注文の多い料理店",     author: "宮沢 賢治",   url: "https://www.aozora.gr.jp/cards/000081/files/1927_18597.html" },
 ];
+
+// ---------------------------------------------------
+// 青空文庫 CSV URL
+// ---------------------------------------------------
+const AOZORA_CSV_ZIP_URL = "https://www.aozora.gr.jp/index_pages/list_person_all_extended_utf8.zip";
 
 // ---------------------------------------------------
 // localStorage のキー定数
@@ -69,9 +35,9 @@ const STORAGE_KEY_UNREAD = "hima_unread_books";
 // ---------------------------------------------------
 // アプリの状態
 // ---------------------------------------------------
-let books        = [];       // 作品一覧
-let currentBook  = null;     // 現在表示中の作品
-let lastBookKey  = null;     // 直前に表示した作品のキー（連続表示防止）
+let books        = [];   // 作品一覧
+let currentBook  = null; // 現在表示中の作品
+let lastBookKey  = null; // 直前に表示した作品のキー（連続表示防止）
 
 // ---------------------------------------------------
 // ページ読み込み時の初期化
@@ -81,11 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /** アプリ初期化 */
-function initApp() {
-  loadBooks();           // 作品データをセット
-  renderStats();         // 件数を表示
-  renderLists();         // 保存済み一覧を表示
-  bindEvents();          // ボタンイベントを登録
+async function initApp() {
+  setLoadingState(true);
+  await loadBooks();
+  setLoadingState(false);
+  renderStats();
+  renderLists();
+  bindEvents();
 }
 
 // ---------------------------------------------------
@@ -93,20 +61,143 @@ function initApp() {
 // ---------------------------------------------------
 
 /**
- * 作品データをセットする関数
- *
- * 【差し替えポイント】
- * 将来的に青空文庫APIや外部JSONから取得する場合は
- * この関数の中身を書き換えてください。
- * books 配列に { title, author, url } の形式でデータを入れれば動きます。
- *
- * 例（fetch を使う場合）:
- *   const res = await fetch("https://example.com/aozora.json");
- *   const data = await res.json();
- *   books = data.map(item => ({ title: item.title, author: item.person_name, url: item.url || "" }));
+ * 青空文庫の公開CSVを取得して作品データをセットする。
+ * 失敗した場合は SAMPLE_BOOKS にフォールバックする。
  */
-function loadBooks() {
-  books = SAMPLE_BOOKS;
+async function loadBooks() {
+  try {
+    const response = await fetch(AOZORA_CSV_ZIP_URL);
+    if (!response.ok) throw new Error("HTTP " + response.status);
+
+    const arrayBuffer = await response.arrayBuffer();
+    const zip = await JSZip.loadAsync(arrayBuffer);
+
+    // ZIP 内の CSV ファイルを取得
+    const csvFileEntry = zip.file(/\.csv$/i)[0];
+    if (!csvFileEntry) throw new Error("CSV file not found in ZIP");
+
+    // UTF-8 として正しくデコード
+    const uint8 = await csvFileEntry.async("uint8array");
+    const csvText = new TextDecoder("utf-8").decode(uint8);
+
+    const parsed = parseAozoraCsv(csvText);
+    if (parsed.length === 0) throw new Error("No books parsed from CSV");
+
+    books = parsed;
+    console.info("青空文庫CSV読み込み完了:", books.length, "件");
+  } catch (e) {
+    console.warn("青空文庫CSVの読み込みに失敗しました。サンプルデータを使用します:", e);
+    books = SAMPLE_BOOKS;
+  }
+}
+
+/**
+ * 青空文庫の拡張CSVテキストをパースして作品配列を返す。
+ * @param {string} csvText - UTF-8 CSV テキスト
+ * @returns {{ title: string, author: string, url: string }[]}
+ */
+function parseAozoraCsv(csvText) {
+  const lines = csvText.split(/\r?\n/);
+  if (lines.length < 2) return [];
+
+  const headers = parseCsvLine(lines[0]);
+
+  const idx = {
+    workId:    headers.indexOf("作品ID"),
+    title:     headers.indexOf("作品名"),
+    lastName:  headers.indexOf("姓"),
+    firstName: headers.indexOf("名"),
+    copyright: headers.indexOf("作品著作権フラグ"),
+    htmlUrl:   headers.indexOf("XHTML/HTMLファイルURL"),
+    cardUrl:   headers.indexOf("図書カードURL"),
+  };
+
+  if (idx.workId < 0 || idx.title < 0 || idx.lastName < 0) return [];
+
+  const result = [];
+  const seenWorkIds = new Set();
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+
+    const cols = parseCsvLine(line);
+
+    const workId = cols[idx.workId] || "";
+    if (!workId || seenWorkIds.has(workId)) continue;
+    seenWorkIds.add(workId);
+
+    // 著作権あり（まだパブリックドメインでない）は除外
+    if (idx.copyright >= 0 && cols[idx.copyright] === "あり") continue;
+
+    const title     = cols[idx.title] || "";
+    const lastName  = cols[idx.lastName] || "";
+    const firstName = cols[idx.firstName] || "";
+    const author    = (lastName + " " + firstName).trim();
+
+    if (!title || !author) continue;
+
+    // 読めるURL: HTMLファイル優先、なければ図書カード
+    const htmlUrl = idx.htmlUrl >= 0 ? (cols[idx.htmlUrl] || "") : "";
+    const cardUrl = idx.cardUrl >= 0 ? (cols[idx.cardUrl] || "") : "";
+    const url = htmlUrl || cardUrl;
+
+    result.push({ title, author, url });
+  }
+
+  return result;
+}
+
+/**
+ * CSV の1行をフィールドの配列に分割する（ダブルクォート対応）。
+ * @param {string} line
+ * @returns {string[]}
+ */
+function parseCsvLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        // エスケープされたダブルクォート
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (ch === "," && !inQuotes) {
+      result.push(current);
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+// ---------------------------------------------------
+// ローディング状態制御
+// ---------------------------------------------------
+
+/** データ読み込み中/完了の UI 状態を切り替える */
+function setLoadingState(loading) {
+  const hintEl    = document.getElementById("hint-msg");
+  const btnRandom = document.getElementById("btn-random");
+
+  if (loading) {
+    hintEl.textContent = "作品データを読み込み中...";
+    hintEl.classList.remove("hidden");
+    btnRandom.disabled = true;
+    btnRandom.textContent = "読み込み中...";
+  } else {
+    hintEl.textContent = "「ランダム表示」を押して作品を表示してください";
+    btnRandom.disabled = false;
+    btnRandom.textContent = "ランダム表示";
+  }
 }
 
 // ---------------------------------------------------
@@ -126,9 +217,9 @@ function showRandomBook() {
   // 候補が0件（作品が1件しかない場合）は全体から選ぶ
   const pool = candidates.length > 0 ? candidates : books;
 
-  const index = Math.floor(Math.random() * pool.length);
-  currentBook  = pool[index];
-  lastBookKey  = makeKey(currentBook);
+  const index     = Math.floor(Math.random() * pool.length);
+  currentBook     = pool[index];
+  lastBookKey     = makeKey(currentBook);
 
   renderBook(currentBook);
   enableActionButtons(true);
@@ -210,12 +301,12 @@ function saveList(storageKey, list) {
 
 /** 作品情報をカードに表示する */
 function renderBook(book) {
-  const hint     = document.querySelector(".hint");
+  const hintEl   = document.getElementById("hint-msg");
   const bookInfo = document.getElementById("book-info");
   const titleEl  = document.getElementById("book-title");
   const authorEl = document.getElementById("book-author");
 
-  hint.classList.add("hidden");
+  hintEl.classList.add("hidden");
   bookInfo.classList.remove("hidden");
   titleEl.textContent  = book.title;
   authorEl.textContent = "著者：" + book.author;
@@ -288,7 +379,7 @@ function showError(message) {
   errEl.classList.remove("hidden");
 
   // カード内のヒントと作品情報を隠す
-  document.querySelector(".hint").classList.add("hidden");
+  document.getElementById("hint-msg").classList.add("hidden");
   document.getElementById("book-info").classList.add("hidden");
 }
 
