@@ -85,6 +85,38 @@ body {
 }
 
 /* ===========================
+   一文ガチャ表示
+   =========================== */
+.quote-display {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.quote-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  line-height: 1.8;
+  text-align: center;
+  word-break: break-all;
+  padding: 4px 0;
+}
+
+.quote-answer {
+  width: 100%;
+  padding-top: 12px;
+  border-top: 1px solid #f0ece4;
+  text-align: center;
+}
+
+.quote-answer .book-title {
+  margin-bottom: 6px;
+}
+
+/* ===========================
    ユーティリティ
    =========================== */
 .hidden {
@@ -131,6 +163,17 @@ body {
   margin-bottom: 10px;
 }
 
+.btn-gacha-area {
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.btn-gacha-area .btn {
+  font-size: 0.9rem;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 .btn-area-aozora {
   margin-bottom: 20px;
 }
@@ -152,6 +195,11 @@ body {
   color: #fff;
 }
 
+.btn-quote {
+  background: #c0392b;
+  color: #fff;
+}
+
 .btn-read {
   background: #27ae60;
   color: #fff;
@@ -170,6 +218,12 @@ body {
 .btn-more {
   background: #888;
   color: #fff;
+}
+
+.btn-reveal {
+  background: #16a085;
+  color: #fff;
+  max-width: 200px;
 }
 
 /* ===========================
@@ -401,6 +455,16 @@ body {
 
   .book-title {
     font-size: 1.5rem;
+  }
+
+  .btn-gacha-area .btn {
+    font-size: 1rem;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .quote-text {
+    font-size: 1.4rem;
   }
 
   .stat-box {

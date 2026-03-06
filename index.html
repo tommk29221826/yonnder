@@ -18,6 +18,15 @@
         <p class="book-title" id="book-title"></p>
         <p class="book-author" id="book-author"></p>
       </div>
+      <!-- 一文ガチャ表示エリア -->
+      <div id="quote-display" class="hidden quote-display">
+        <p class="quote-text" id="quote-text"></p>
+        <button class="btn btn-reveal" id="btn-reveal-answer">答えを見る</button>
+        <div id="quote-answer" class="hidden quote-answer">
+          <p class="book-title" id="quote-book-title"></p>
+          <p class="book-author" id="quote-book-author"></p>
+        </div>
+      </div>
       <p class="error-msg hidden" id="error-msg"></p>
     </div>
 
@@ -25,6 +34,7 @@
     <div class="btn-area btn-gacha-area">
       <button class="btn btn-random" id="btn-random">作品ガチャ</button>
       <button class="btn btn-author" id="btn-author">作者ガチャ</button>
+      <button class="btn btn-quote" id="btn-quote">一文ガチャ</button>
     </div>
 
     <!-- 仕分けボタンエリア -->
