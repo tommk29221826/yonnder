@@ -404,6 +404,7 @@ function showRandomAuthor() {
   }
 
   currentMode = "author";
+  currentBook = null;
 
   const index = Math.floor(Math.random() * authorList.length);
   currentAuthor    = authorList[index];
@@ -411,6 +412,15 @@ function showRandomAuthor() {
 
   // 一文ガチャエリアを隠す
   document.getElementById("quote-area").classList.add("hidden");
+
+  // 作品情報エリアをリセットしてヒントを表示
+  document.getElementById("book-info").classList.add("hidden");
+  const hintEl = document.getElementById("hint-msg");
+  hintEl.textContent = "作品名をタップして選択してください";
+  hintEl.classList.remove("hidden");
+
+  // 仕分けボタン・青空文庫ボタンを無効化
+  enableActionButtons(false);
 
   renderAuthorSection(currentAuthor);
   hideError();
@@ -461,15 +471,15 @@ function renderAuthorBookItems(listEl, bookList, start, end) {
     numSpan.textContent = (i + 1) + ".";
     li.appendChild(numSpan);
 
-    if (book.url) {
-      const a = document.createElement("a");
-      a.className   = "book-link";
-      a.textContent = book.title;
-      a.href        = book.url;
-      a.target      = "_blank";
-      a.rel         = "noopener noreferrer";
-      li.appendChild(a);
+    // 作品タイトル: タップで currentBook に設定するボタン
+    const titleBtn = document.createElement("button");
+    titleBtn.className   = "book-title-btn";
+    titleBtn.textContent = book.title;
+    titleBtn.addEventListener("click", () => selectAuthorBook(book, li));
+    li.appendChild(titleBtn);
 
+    // 「青空文庫で読む」リンク: URL がある場合のみ表示
+    if (book.url) {
       const tag = document.createElement("a");
       tag.className   = "aozora-tag";
       tag.textContent = "青空文庫で読む";
@@ -477,15 +487,29 @@ function renderAuthorBookItems(listEl, bookList, start, end) {
       tag.target      = "_blank";
       tag.rel         = "noopener noreferrer";
       li.appendChild(tag);
-    } else {
-      const span = document.createElement("span");
-      span.className   = "book-no-link";
-      span.textContent = book.title;
-      li.appendChild(span);
     }
 
     listEl.appendChild(li);
   }
+}
+
+/**
+ * 作者ガチャ一覧から作品を選択して currentBook に設定する
+ * @param {Object} book       - 選択した作品 { title, author, url }
+ * @param {HTMLElement} selectedLi - クリックされた <li> 要素
+ */
+function selectAuthorBook(book, selectedLi) {
+  // 既存の選択状態をリセット
+  const listEl = document.getElementById("author-book-list");
+  listEl.querySelectorAll("li.selected").forEach(li => li.classList.remove("selected"));
+
+  // 新たに選択された行をハイライト
+  selectedLi.classList.add("selected");
+
+  // currentBook を更新してカードに反映
+  currentBook = book;
+  renderBook(book);
+  enableActionButtons(true);
 }
 
 /** 「もっと見る」で次の AUTHOR_PAGE_SIZE 件を追加表示する */
