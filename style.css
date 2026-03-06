@@ -55,6 +55,7 @@ body {
   text-align: center;
   min-height: 110px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
@@ -88,7 +89,7 @@ body {
    ユーティリティ
    =========================== */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* ===========================
@@ -152,6 +153,12 @@ body {
   color: #fff;
 }
 
+.btn-quote {
+  background: #c0392b;
+  color: #fff;
+  grid-column: 1 / -1;
+}
+
 .btn-read {
   background: #27ae60;
   color: #fff;
@@ -170,6 +177,51 @@ body {
 .btn-more {
   background: #888;
   color: #fff;
+}
+
+/* ===========================
+   一文ガチャ表示
+   =========================== */
+#quote-area {
+  width: 100%;
+}
+
+.quote-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+}
+
+.quote-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  line-height: 2;
+  text-align: center;
+  word-break: break-all;
+  padding: 0 4px;
+}
+
+.btn-reveal {
+  background: #8b6914;
+  color: #fff;
+  width: auto;
+  min-width: 160px;
+  max-width: 260px;
+  padding: 12px 20px;
+}
+
+.quote-answer {
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid #e0d8cc;
+  text-align: center;
+}
+
+.quote-answer .book-title {
+  margin-bottom: 8px;
 }
 
 /* ===========================
@@ -401,6 +453,10 @@ body {
 
   .book-title {
     font-size: 1.5rem;
+  }
+
+  .quote-text {
+    font-size: 1.45rem;
   }
 
   .stat-box {
