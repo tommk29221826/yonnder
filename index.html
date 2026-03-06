@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>暇つぶし読書仕分けアプリ</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -13,7 +13,7 @@
 
     <!-- 作品表示エリア -->
     <div class="card" id="book-card">
-      <p class="hint" id="hint-msg">「ランダム表示」を押して作品を表示してください</p>
+      <p class="hint" id="hint-msg">「作品ガチャ」を押して作品を表示してください</p>
       <div id="book-info" class="hidden">
         <p class="book-title" id="book-title"></p>
         <p class="book-author" id="book-author"></p>
@@ -21,14 +21,33 @@
       <p class="error-msg hidden" id="error-msg"></p>
     </div>
 
-    <!-- ボタンエリア -->
-    <div class="btn-area">
-      <button class="btn btn-random" id="btn-random">ランダム表示</button>
+    <!-- ガチャボタンエリア -->
+    <div class="btn-area btn-gacha-area">
+      <button class="btn btn-random" id="btn-random">作品ガチャ</button>
+      <button class="btn btn-author" id="btn-author">作者ガチャ</button>
+    </div>
+
+    <!-- 仕分けボタンエリア -->
+    <div class="btn-area btn-action-area">
       <button class="btn btn-read" id="btn-read" disabled>読んだ</button>
       <button class="btn btn-unread" id="btn-unread" disabled>読んでない</button>
     </div>
+
+    <!-- 青空文庫ボタン -->
     <div class="btn-area-aozora">
       <button class="btn btn-aozora" id="btn-aozora" disabled>青空文庫で読む</button>
+    </div>
+
+    <!-- 作者ガチャ表示エリア -->
+    <div id="author-section" class="author-section hidden">
+      <div class="author-card">
+        <p class="author-name" id="author-name"></p>
+        <p class="author-book-count" id="author-book-count"></p>
+      </div>
+      <ul class="author-book-list" id="author-book-list"></ul>
+      <div class="btn-area-more">
+        <button class="btn btn-more hidden" id="btn-more-books">もっと見る</button>
+      </div>
     </div>
 
     <!-- 件数表示 -->
