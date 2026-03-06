@@ -461,15 +461,23 @@ function renderAuthorBookItems(listEl, bookList, start, end) {
     numSpan.textContent = (i + 1) + ".";
     li.appendChild(numSpan);
 
-    if (book.url) {
-      const a = document.createElement("a");
-      a.className   = "book-link";
-      a.textContent = book.title;
-      a.href        = book.url;
-      a.target      = "_blank";
-      a.rel         = "noopener noreferrer";
-      li.appendChild(a);
+    // 作品タイトル：タップで読んだ/読んでないをトグル
+    const titleSpan = document.createElement("span");
+    titleSpan.className   = "book-title-toggle";
+    titleSpan.textContent = book.title;
+    li.appendChild(titleSpan);
 
+    // 読んだ/読んでないバッジ
+    const statusBadge = document.createElement("span");
+    updateStatusBadge(statusBadge, book);
+    li.appendChild(statusBadge);
+
+    titleSpan.addEventListener("click", () => {
+      toggleAuthorBookStatus(book);
+      updateStatusBadge(statusBadge, book);
+    });
+
+    if (book.url) {
       const tag = document.createElement("a");
       tag.className   = "aozora-tag";
       tag.textContent = "青空文庫で読む";
@@ -477,14 +485,53 @@ function renderAuthorBookItems(listEl, bookList, start, end) {
       tag.target      = "_blank";
       tag.rel         = "noopener noreferrer";
       li.appendChild(tag);
-    } else {
-      const span = document.createElement("span");
-      span.className   = "book-no-link";
-      span.textContent = book.title;
-      li.appendChild(span);
     }
 
     listEl.appendChild(li);
+  }
+}
+
+/**
+ * 作品の現在の読書ステータスを返す
+ * @param {Object} book
+ * @returns {"read" | "unread" | "none"}
+ */
+function getBookStatus(book) {
+  const key = makeKey(book);
+  if (getList(STORAGE_KEY_READ).some(b => makeKey(b) === key))   return "read";
+  if (getList(STORAGE_KEY_UNREAD).some(b => makeKey(b) === key)) return "unread";
+  return "none";
+}
+
+/**
+ * 作品の読書ステータスをトグルする
+ * 未登録・読んでない → 読んだ　／　読んだ → 読んでない
+ * @param {Object} book
+ */
+function toggleAuthorBookStatus(book) {
+  if (getBookStatus(book) === "read") {
+    saveBook(book, STORAGE_KEY_UNREAD, STORAGE_KEY_READ);
+  } else {
+    saveBook(book, STORAGE_KEY_READ, STORAGE_KEY_UNREAD);
+  }
+}
+
+/**
+ * ステータスバッジの表示を更新する
+ * @param {HTMLElement} badgeEl
+ * @param {Object} book
+ */
+function updateStatusBadge(badgeEl, book) {
+  const status = getBookStatus(book);
+  if (status === "read") {
+    badgeEl.className   = "status-badge status-read";
+    badgeEl.textContent = "読んだ";
+  } else if (status === "unread") {
+    badgeEl.className   = "status-badge status-unread";
+    badgeEl.textContent = "読んでない";
+  } else {
+    badgeEl.className   = "status-badge";
+    badgeEl.textContent = "";
   }
 }
 

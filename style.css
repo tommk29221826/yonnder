@@ -282,23 +282,35 @@ body {
   flex-shrink: 0;
 }
 
-.author-book-list .book-link {
-  color: #2c5282;
-  text-decoration: none;
-  font-weight: bold;
-  word-break: break-all;
-  flex: 1;
-}
-
-.author-book-list .book-link:hover {
-  text-decoration: underline;
-}
-
-.author-book-list .book-no-link {
+.author-book-list .book-title-toggle {
   color: #333;
   font-weight: bold;
   word-break: break-all;
   flex: 1;
+  cursor: pointer;
+}
+
+.author-book-list .book-title-toggle:hover {
+  color: #2c5282;
+}
+
+.status-badge {
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.status-read {
+  background: #d5f0e0;
+  color: #1e7a46;
+}
+
+.status-unread {
+  background: #fdebd0;
+  color: #a04000;
 }
 
 .author-book-list .aozora-tag {
